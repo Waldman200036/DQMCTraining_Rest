@@ -1,0 +1,44 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Training RESTful Web Services with Node.js and Express",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Waldman200036/DQMCtraining-rest-course.git"
+  },
+  "author": "Walter Walden",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Waldman200036/DQMCtraining-rest-course/issues"
+  },
+  "homepage": "https://github.com/Waldman200036/DQMCtraining-rest-course#readme",
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "debug": "^4.1.1",
+    "express": "4.17.1",
+    "mongoose": "5.9.24",
+    "nodemon": "2.0.4"
+  },
+  "devDependencies": {
+    "eslint": "7.4.0",
+    "eslint-config-airbnb-base": "14.2.0",
+    "eslint-plugin-import": "2.22.0"
+  },
+  "nodemomnConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": 5000
+    }
+  }
+}
