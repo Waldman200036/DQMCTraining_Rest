@@ -8,7 +8,7 @@ const {
 const TraineeModel = new Schema({
     firstName: { type:String } , 
     lastName: { type: String },
-    org:   { type: String },
+    Organization:   { type: String },
     branch:  { type: String },
     facility:  { type: String },
     email:  { type: String },

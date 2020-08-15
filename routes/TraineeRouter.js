@@ -3,12 +3,12 @@
 const express = require('express');
 
 function routes(Trainee) {
-  const TraineeRouter = express.Router();
-  TraineeRouter.route('/Trainees')
+  const traineeRouter = express.Router();
+  traineeRouter.route('/Trainees')
     .post((req, res) => {
-      const Trainee = new Trainee(req.body);
-      Trainee.save();
-      return res.status(201).json(Trainee);
+      const trainee = new Trainee(req.body);
+      trainee.save();
+      return res.status(201).json(trainee);
     })
     .get((req, res) => {
       const query = {};
@@ -21,39 +21,39 @@ function routes(Trainee) {
     });
 
   // Middleware function for '/Trainees/:TraineeId' route
-  TraineeRouter.use('/Trainees/:TraineeId', (req, res, next) => {
-    Trainee.findById(req.params.TraineeId, (err, Trainee) => {
+  traineeRouter.use('/Trainees/:TraineeId', (req, res, next) => {
+    Trainee.findById(req.params.traineeId, (err, trainee) => {
       if (err) {
         return res.send(err);
       }
-      if (Trainee) {
-        req.Trainee = Trainee;
+      if (trainee) {
+        req.trainee = trainee;
         return next();
       }
       // Error Trainee does not exist
       return res.sendStatus(404);
     });
   });
-  TraineeRouter.route('/Trainees/:TraineeId')
-    .get((req, res) => res.json(req.Trainee))
+  traineeRouter.route('/Trainees/:TraineeId')
+    .get((req, res) => res.json(req.trainee))
     .put((req, res) => {
       const {
-        Trainee
+        trainee
       } = req;
-      Trainee.firstName = req.body.firstName;
-      Trainee.lastName = req.body.lastName;
-      Trainee.date = req.body.date;
-      Trainee.Time = req.body.Time;
-      req.Trainee.save((err) => {
+      trainee.firstName = req.body.firstName;
+      trainee.lastName = req.body.lastName;
+      trainee.date = req.body.date;
+      trainee.Time = req.body.Time;
+      req.trainee.save((err) => {
         if (err) {
           return res.send(err);
         }
-        return res.json(Trainee);
+        return res.json(trainee);
       });
     })
     .patch((req, res) => {
       const {
-        Trainee
+        trainee
       } = req;
       // eslint-disable-next-line no-underscore-dangle
       if (req.body._id) {
@@ -64,16 +64,16 @@ function routes(Trainee) {
       Object.entries(req.body).forEach((item) => {
         const key = item[0];
         const value = item[1];
-        Trainee[key] = value;
+        trainee[key] = value;
       });
-      req.Trainee.save((err) => {
+      req.trainee.save((err) => {
         if (err) {
           return res.send(err);
         }
-        return res.json(Trainee);
+        return res.json(trainee);
       });
     });
-  return TraineeRouter;
+  return traineeRouter;
 }
 
 module.exports = routes;
