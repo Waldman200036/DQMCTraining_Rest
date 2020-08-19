@@ -1,20 +1,31 @@
-/* jshint esversion: 6 */
-const mongoose = require('mongoose');
+/* jshint  esversion:8 */
+class TraineeModel {
+    constructor(trainee) {
+        this.firstName = trainee.firstName,
+            this.lastName = trainee.lastName,
+            this.Organization = trainee.Organization,
+            this.branch = trainee.branch,
+            this.facility = trainee.facility,
+            this.email = trainee.email,
+            this.phone = trainee.phone,
+            this.date = trainee.date,
+            this.time = trainee.time
+    }
+    getUpdate() {
+        return {
+            $set: {
+                firstName: this.firstName,
+                lastName: this.lastName,
+                Organization: this.Organization,
+                branch: this.branch,
+                facility: this.facility,
+                email: this.email,
+                phone: this.phone,
+                date: this.date,
+                time: this.time
+            }
+        };
+    }
+}
 
-const {
-  Schema,
-} = mongoose;
-
-const TraineeModel = new Schema({
-    firstName: { type:String } , 
-    lastName: { type: String },
-    Organization:   { type: String },
-    branch:  { type: String },
-    facility:  { type: String },
-    email:  { type: String },
-    phone:  { type: String },
-    date: { type: Date },
-    Time: { type: Date },
-});
-
-module.exports = mongoose.model('Trainee', TraineeModel);
+module.exports = TraineeModel;

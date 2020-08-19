@@ -1,14 +1,20 @@
-/* eslint-disable no-param-reassign */
 /* jshint esversion: 6 */
 const express = require('express');
-
-function routes(Trainee) {
+const Trainee = require('../mongodb/save');
+function routes() {
   const traineeRouter = express.Router();
   traineeRouter.route('/Trainees')
     .post((req, res) => {
-      const trainee = new Trainee(req.body);
-      trainee.save();
-      return res.status(201).json(trainee);
+      const trainee = req.body;
+/*       Trainee.SaveData(trainee).then(result => {
+        console.log(result);
+      })
+      .catch(err => console.log(err)); */
+    
+      return res.status(201).json({
+        message: 'Handling POST request to /Trainees',
+        trainee
+      });
     })
     .get((req, res) => {
       const query = {};
@@ -16,7 +22,10 @@ function routes(Trainee) {
         if (err) {
           return res.send(err);
         }
-        return res.json(Trainees);
+        return res.json({
+          message: 'Handling GET request to /Trainees',
+          Trainees
+        });
       });
     });
 
