@@ -34,11 +34,51 @@ const insertDocument = function(db, doc, col, callback) {
   });
 }
 
+const findDocuments = function(db,email, callback) {
+  // Get the documents collection
+  const collection = db.collection('trainee');
+  // Find some documents
+  collection.find({email: email}).toArray(function(err, docs) {
+    assert.equal(err, null);
+    debug("Found the following records");
+    // debug(docs);
+    callback(docs);
+  });
+}
 app.get('/', (req, resp) => {
   console.log('Welcome to my API!!!');
   resp.send('Welcome to my API!!!');
 });
 
+app.get('/apiTraining/get/:email', (req, res) => {
+  
+  // Local Connection URL
+   const url = 'mongodb://localhost:27017';
+  // Database Name
+  const dbName = 'Training';
+  // Use connect method to connect to the server
+       MongoClient.connect(url, function(err, client) {
+       
+      assert.equal(null, err);
+      debug("Connected successfully to server");
+
+      const db = client.db(dbName); 
+
+        //      return res.json({
+        //   message: 'Handling GET request to /apiTraining/get/email:/',
+        //   body: req.params.email
+        // });       
+
+      findDocuments(db,req.params.email, function(results){
+       return res.json({
+          message: 'Handling GET request to /apiTraining/get/email:/',
+          body: results
+        });        
+        client.close();
+      });
+      
+    });
+});
 app.post('/apiTraining/post', (req, res) => {
   
   // Local Connection URL
