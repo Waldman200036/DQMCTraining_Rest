@@ -1,6 +1,5 @@
 /* jshint esversion:8 */
 const MongoClient = require('mongodb').MongoClient;
-// const uri = "mongodb+srv://dbAPIUser:FtnhY6CYKcDtqPz1@cluster0.1mk1d.mongodb.net/sample_mflix?retryWrites=true&w=majority";
 const uri = "mongodb://localhost/Training";
 const client = new MongoClient(uri, {
   useNewUrlParser: true
