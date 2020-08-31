@@ -20,9 +20,9 @@ app.use(bodyParser.json());
 
 app.use('/auth', authRouter);
 
-const updateDocument = function (db, doc, callback) {
+const updateDocument = function (db, doc, col,callback) {
   // Get the documents collection
-  const collection = db.collection(doc);
+  const collection = db.collection(col);
   // Update document where a is 2, set b equal to 1
   collection.updateOne({
     email: doc.email
@@ -47,7 +47,7 @@ const updateDocument = function (db, doc, callback) {
   }, function (err, result) {
     assert.equal(err, null);
     assert.equal(1, result.result.n);
-    debug("Updated the document with the email a equal to 2");
+    debug("Updated the document with the email a equal to email");
     callback(result);
   });
 };
@@ -98,13 +98,8 @@ app.get('/apiTraining/get/:email', (req, res) => {
 
     const db = client.db(dbName);
 
-    //      return res.json({
-    //   message: 'Handling GET request to /apiTraining/get/email:/',
-    //   body: req.params.email
-    // });       
-
     findDocuments(db, req.params.email, function (results) {
-      client.close();    
+      client.close();
       return res.json({
         message: 'Handling GET request to /apiTraining/get/email:/',
         body: results
@@ -129,14 +124,26 @@ app.post('/apiTraining/post', (req, res) => {
 
     const db = client.db(dbName);
 
-    insertDocument(db, req.body, 'trainee', function (results) {
+    updateDocument(db, req.body, 'trainee', function (results) {
+      assert.equal(err, null);
+      assert.equal(1, results.result.n);
       client.close();
+      debug(`results from updateDocument call: ${results}`);
       return res.json({
-        message: 'Handling GET request to /Trainees',
+        message: 'Handling PUT request to /Trainees',
         body: results
       });
 
     });
+//TODO write method to skip insert if documnent was updated or run if not updated
+    // insertDocument(db, req.body, 'trainee', function (results) {
+    //   client.close();
+    //   return res.json({
+    //     message: 'Handling GET request to /Trainees',
+    //     body: results
+    //   });
+
+    // });
 
   });
 });
