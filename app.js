@@ -127,6 +127,7 @@ app.post('/apiTraining/post', (req, res) => {
     updateDocument(db, req.body, 'trainee', function (results) {
       assert.equal(err, null);
       assert.equal(1, results.result.n);
+      debug('Finished asserts');
       client.close();
       debug(`results from updateDocument call: ${results}`);
       return res.json({
