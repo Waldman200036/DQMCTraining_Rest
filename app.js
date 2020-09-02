@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const debug = require('debug')('app');
 const chalk = require('chalk');
-
+const model = require('./models/TraineeModel');
 const app = express();
 
 const port = process.env.PORT || 5000;
@@ -20,7 +20,22 @@ app.use(bodyParser.json());
 
 app.use('/auth', authRouter);
 
-const updateDocument = function (db, doc, col,callback) {
+const findAndUpdateDocument = function (db, doc, col, callback) {
+  // Get the documents collection
+  const collection = db.collection(col);
+  // Update document where a is 2, set b equal to 1
+  collection.findOneAndReplace({
+    email: doc.email
+  }, doc, {
+    upsert: true
+  }, function (err, result) {
+    assert.equal(err, null);
+    // assert.equal(1, result.result.n);
+    debug("findAndUpdated the document with the email a equal to email");
+    callback(result);
+  });
+};
+const updateDocument = function (db, doc, col, callback) {
   // Get the documents collection
   const collection = db.collection(col);
   // Update document where a is 2, set b equal to 1
@@ -124,19 +139,32 @@ app.post('/apiTraining/post', (req, res) => {
 
     const db = client.db(dbName);
 
-    updateDocument(db, req.body, 'trainee', function (results) {
+    // updateDocument(db, req.body, 'trainee', function (results) {
+    //   assert.equal(err, null);
+    //   assert.equal(1, results.result.n);
+    //   debug('Finished asserts');
+    //   client.close();
+    //   debug(`results from updateDocument call: ${results}`);
+    //   return res.json({
+    //     message: 'Handling PUT request to /Trainees',
+    //     body: results
+    //   });
+
+    // });
+
+    findAndUpdateDocument(db, req.body, 'trainee', function (results) {
+      debug(`results from findOneAndReplace call: ${results}`);      
       assert.equal(err, null);
-      assert.equal(1, results.result.n);
+      // assert.equal(1, results.result.n);
       debug('Finished asserts');
       client.close();
-      debug(`results from updateDocument call: ${results}`);
+
       return res.json({
         message: 'Handling PUT request to /Trainees',
         body: results
       });
-
     });
-//TODO write method to skip insert if documnent was updated or run if not updated
+    //TODO write method to skip insert if documnent was updated or run if not updated
     // insertDocument(db, req.body, 'trainee', function (results) {
     //   client.close();
     //   return res.json({
