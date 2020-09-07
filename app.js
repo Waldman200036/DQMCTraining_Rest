@@ -126,11 +126,50 @@ app.get('/apiTraining/getUser/:email', (req, res) => {
 
   });
 });
-app.post('/apiTraining/post', (req, res) => {
+app.get('/apiTraining/get', (req, res) => {
 
   // Local Connection URL
   // const url = 'mongodb://localhost:27017';
 
+  // Database Name
+  const dbName = 'Training';
+  // Use connect method to connect to the server
+  MongoClient.connect(url, function (err, client) {
+
+    assert.equal(null, err);
+    debug("Connected successfully to server");
+
+    const db = client.db(dbName);
+
+    findDocuments(db, '{}', 'trainee', function (results) {
+      debug(`results from findOneAndReplace call: ${results}`);      
+      assert.equal(err, null);
+      // assert.equal(1, results.result.n);
+      debug('Finished asserts');
+      client.close();
+
+      return res.json({
+        message: 'Handling PUT request to /Trainees',
+        body: results
+      });
+    });
+    //TODO write method to skip insert if documnent was updated or run if not updated
+    // insertDocument(db, req.body, 'trainee', function (results) {
+    //   client.close();
+    //   return res.json({
+    //     message: 'Handling GET request to /Trainees',
+    //     body: results
+    //   });
+
+    // });
+
+  });
+});
+app.post('/apiTraining/post', (req, res) => {
+
+  // Local Connection URL
+  // const url = 'mongodb://localhost:27017';
+  const url = 'mongodb+srv://dbAPIUser:aAzzhulCjjjw1a6R@cluster0.1mk1d.mongodb.net/Training?retryWrites=true&w=majority';
   // Database Name
   const dbName = 'Training';
   // Use connect method to connect to the server
