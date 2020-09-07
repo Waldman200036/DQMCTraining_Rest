@@ -12,6 +12,8 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
 const authRouter = require('./src/routes/authRoutes');
+const url = 'mongodb+srv://dbAPIUser:aAzzhulCjjjw1a6R@cluster0.1mk1d.mongodb.net/Training?retryWrites=true&w=majority';
+const dbName = 'Training';
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -81,9 +83,9 @@ const insertDocument = function (db, doc, col, callback) {
   });
 };
 
-const findDocuments = function (db, email, callback) {
+const findDocuments = function (db, email, doc, callback) {
   // Get the documents collection
-  const collection = db.collection('trainee');
+  const collection = db.collection(doc);
   // Find some documents
   collection.find({
     email: email
@@ -94,17 +96,16 @@ const findDocuments = function (db, email, callback) {
     callback(docs);
   });
 };
+
 app.get('/', (req, resp) => {
   console.log('Welcome to my API!!!');
   resp.send('Welcome to my API!!!');
 });
 
-app.get('/apiTraining/get/:email', (req, res) => {
-
-  // Local Connection URL
-  const url = 'mongodb://localhost:27017';
+app.get('/apiTraining/getUser/:email', (req, res) => {
+// Call is http://localhost:5000/apiTraining/getUser/waldman@200036@gmail.com
   // Database Name
-  const dbName = 'Training';
+
   // Use connect method to connect to the server
   MongoClient.connect(url, function (err, client) {
 
@@ -112,11 +113,12 @@ app.get('/apiTraining/get/:email', (req, res) => {
     debug("Connected successfully to server");
 
     const db = client.db(dbName);
+    const email = req.params.email;
 
-    findDocuments(db, req.params.email, function (results) {
+    findDocuments(db, email,'users', function (results) {
       client.close();
       return res.json({
-        message: 'Handling GET request to /apiTraining/get/email:/',
+        message: `Handling GET request to /apiTraining/get/email:/${email}`,
         body: results
       });
 
@@ -128,7 +130,7 @@ app.post('/apiTraining/post', (req, res) => {
 
   // Local Connection URL
   // const url = 'mongodb://localhost:27017';
-  const url = 'mongodb+srv://dbAPIUser:aAzzhulCjjjw1a6R@cluster0.1mk1d.mongodb.net/Training?retryWrites=true&w=majority';
+
   // Database Name
   const dbName = 'Training';
   // Use connect method to connect to the server
@@ -139,21 +141,8 @@ app.post('/apiTraining/post', (req, res) => {
 
     const db = client.db(dbName);
 
-    // updateDocument(db, req.body, 'trainee', function (results) {
-    //   assert.equal(err, null);
-    //   assert.equal(1, results.result.n);
-    //   debug('Finished asserts');
-    //   client.close();
-    //   debug(`results from updateDocument call: ${results}`);
-    //   return res.json({
-    //     message: 'Handling PUT request to /Trainees',
-    //     body: results
-    //   });
-
-    // });
-
     findAndUpdateDocument(db, req.body, 'trainee', function (results) {
-      debug(`results from findOneAndReplace call: ${results}`);      
+      debug(`results from findOneAndReplace call: ${results}`);
       assert.equal(err, null);
       // assert.equal(1, results.result.n);
       debug('Finished asserts');
