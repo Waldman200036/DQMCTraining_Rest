@@ -84,6 +84,18 @@ const insertDocument = function (db, doc, col, callback) {
   });
 };
 
+const findAllDocuments = function (db, doc, callback) {
+  // Get the documents collection
+  const collection = db.collection(doc);
+  // Find some documents
+  collection.find({
+  }).toArray(function (err, docs) {
+    assert.equal(err, null);
+    debug("Found the following records");
+    // debug(docs);
+    callback(docs);
+  });
+};
 const findDocuments = function (db, email, doc, callback) {
   // Get the documents collection
   const collection = db.collection(doc);
@@ -114,7 +126,7 @@ app.get('/apiTraining/getSurvey/', (req, res) => {
 
     const db = client.db(dbName);
 
-    findDocuments(db, {},'Survey', function (results) {
+    findAllDocuments(db,'Survey', function (results) {
       client.close();
       return res.json({
         message: `Handling GET request to apiTraining/getSurvey/`,
