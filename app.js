@@ -103,6 +103,28 @@ app.get('/', (req, resp) => {
   resp.send('Welcome to my API!!!');
 });
 
+app.get('/apiTraining/getSurvey/', (req, res) => {
+  // Database Name
+
+  // Use connect method to connect to the server
+  MongoClient.connect(url, function (err, client) {
+
+    assert.equal(null, err);
+    debug("Connected successfully to server");
+
+    const db = client.db(dbName);
+
+    findDocuments(db, {},'Survey', function (results) {
+      client.close();
+      return res.json({
+        message: `Handling GET request to apiTraining/getSurvey/`,
+        body: results
+      });
+
+    });
+
+  });
+});
 app.get('/apiTraining/getUser/:email', (req, res) => {
 // Call is http://localhost:5000/apiTraining/getUser/waldman@200036@gmail.com
   // Database Name
