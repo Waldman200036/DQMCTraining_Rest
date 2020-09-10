@@ -37,6 +37,7 @@ const findAndUpdateDocument = function (db, doc, col, callback) {
     callback(result);
   });
 };
+
 const updateDocument = function (db, doc, col, callback) {
   // Get the documents collection
   const collection = db.collection(col);
