@@ -22,6 +22,9 @@ app.use(bodyParser.json());
 
 app.use('/auth', authRouter);
 
+// create application/json parser
+const jsonParser = bodyParser.json();
+
 const findAndUpdateDocument = function (db, doc, col, callback) {
   // Get the documents collection
   const collection = db.collection(col);
@@ -115,7 +118,7 @@ app.get('/', (req, resp) => {
   resp.send('Welcome to my API!!!');
 });
 
-app.get('/apiTraining/getSurvey/', (req, res) => {
+app.get('/apiTraining/getSurvey/', jsonParser,(req, res) => {
   // Database Name
 
   // Use connect method to connect to the server
